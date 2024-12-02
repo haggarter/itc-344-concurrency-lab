@@ -1,7 +1,7 @@
 #include <pthread.h>
 #include <semaphore.h>
 
-#include "help.h"
+#include "../helper_code/help.h"
 
 #define NUM_THREADS 8
 #define QUEUE_SIZE 5
