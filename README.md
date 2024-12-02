@@ -10,7 +10,14 @@ The socket setup for accepting client connections is pre-built and provided to y
 
 - Forking a new process for each client.
 - Assigning each client connection to a thread in a thread pool.
-- Learning Objectives
+
+## Learning Objectives
 - Understand and implement concurrency using threads and processes.
 - Identify and address race conditions in a multi-threaded context.
 - Compare performance and resource usage between threading and forking models.
+
+## Grade
+- [ ] Successfully implement processes
+- [ ] Successfully implement thread
+- [ ] Identify the benefits and costs of each option
+- [ ] Resolve race-case scenarios with threads
