@@ -67,31 +67,6 @@ int parse_sockaddr(const struct sockaddr *addr, char *ip, unsigned short *port) 
 	return 0;
 }
 
-void parse_request(char *request, char *method, char *hostname, char *port, char *path) {
-	char *start = request;
-	char *end = strstr(start, " ");
-	strncpy(method, start, end - start);
-	method[end - start] = '\0';
-	start = strstr(start, "://") + 3;
-	if ((end = strstr(start, ":")) != strstr(start, ": ")) {
-		strncpy(hostname, start, end - start);
-		hostname[end - start] = '\0';
-		start = end + 1;
-		end = strstr(start, "/");
-		strncpy(port, start, end - start);
-		port[end - start] = '\0';
-	} else {
-		end = strstr(start, "/");
-		strncpy(hostname, start, end - start);
-		hostname[end - start] = '\0';
-		strcpy(port, "80");
-	}
-	start = end;
-	end = strstr(start, " ");
-	strncpy(path, start, end - start);
-	path[end - start] = '\0';
-}
-
 int complete_request_received(char *request) {
 	if (strstr(request, "\r\n\r\n") == NULL)
 		return 0;
@@ -111,83 +86,30 @@ int open_sfd(char* port) {
 }
 
 void handle_client(int sfd) {
-	char req[MAX_REQ];
+	while(1) {
+		char req[MAX_REQ];
 
-	int t_read = 0;
-	int n_read = 0;
-	req[0] = '\0';
-	while (!complete_request_received(req)) {
-		n_read = read(sfd, req + t_read, MAX_CHUNK);
-		t_read += n_read;
+		int t_read = 0;
+		int n_read = 0;
+		req[0] = '\0';
+		while (!complete_request_received(req)) {
+			n_read = read(sfd, req + t_read, MAX_CHUNK);
+			if (!n_read) {
+				close(sfd);
+				return;
+			}
+			t_read += n_read;
+		}
+		req[t_read] = '\0';
+
+		int message_size = t_read;
+		int t_sent = 0;
+		while (message_size > 0) {
+			int n_sent = send(sfd, req + t_sent, message_size, 0);
+			t_sent += n_sent;
+			message_size -= n_sent;
+		}
 	}
-	req[t_read] = '\0';
-
-	char method[16], hostname[64], port[8], path[64];
-	parse_request(req, method, hostname, port, path);
-
-	char new_req[MAX_REQ];
-	if (!strcmp(port, "80")) {
-		sprintf(new_req, "%s %s HTTP/1.0\r\nHost: %s\r\nUser-Agent: %s\r\nConnection: close\r\nProxy-Connection: close\r\n\r\n", method, path, hostname, user_agent_hdr);
-	} else {
-		sprintf(new_req, "%s %s HTTP/1.0\r\nHost: %s:%s\r\nUser-Agent: %s\r\nConnection: close\r\nProxy-Connection: close\r\n\r\n", method, path, hostname, port, user_agent_hdr);
-	}
-
-	struct addrinfo hints;
-	memset(&hints, 0, sizeof(struct addrinfo));
-	hints.ai_family = AF_INET;
-	hints.ai_socktype = SOCK_STREAM;
-
-	struct addrinfo* result;
-	getaddrinfo(hostname, port, &hints, &result);
-
-	struct sockaddr_storage s_ss;
-	struct sockaddr *server = (struct sockaddr*)&s_ss;
-	int s_sfd;
-	char s_ip[INET6_ADDRSTRLEN];
-	unsigned short s_port;
-	socklen_t addr_len;
-
-	struct addrinfo *iter;
-	for (iter = result; iter != NULL; iter = iter->ai_next) {
-		s_sfd = socket(iter->ai_family, iter->ai_socktype, 0);
-		if (s_sfd < 0)
-			continue;
-		addr_len = iter->ai_addrlen;
-		memcpy(server, iter->ai_addr, sizeof(struct sockaddr_storage));
-		parse_sockaddr(server, s_ip, &s_port);
-		if (connect(s_sfd, server, addr_len) >= 0)
-			break;
-		close(s_sfd);
-	}
-
-	freeaddrinfo(result);
-
-	int message_size = strlen(new_req);
-	int t_sent = 0;
-	while (message_size > 0) {
-		int n_sent = send(s_sfd, new_req + t_sent, message_size, 0);
-		t_sent += n_sent;
-		message_size -= n_sent;
-	}
-
-	char resp[MAX_OBJECT_SIZE];
-
-	t_read = 0;
-	n_read = 0;
-	while((n_read = read(s_sfd, resp + t_read, MAX_CHUNK)) != 0)
-		t_read += n_read;
-
-	close(s_sfd);
-
-	message_size = t_read;
-        t_sent = 0;
-        while (message_size > 0) {
-                int n_sent = send(sfd, resp + t_sent, message_size, 0);
-                t_sent += n_sent;
-                message_size -= n_sent;
-        }
-
-	close(sfd);
 }
 
 int accept_client(int sfd) {
@@ -196,3 +118,4 @@ int accept_client(int sfd) {
 	socklen_t size = sizeof(struct sockaddr_storage);
 	return accept(sfd, client, &size);
 }
+
