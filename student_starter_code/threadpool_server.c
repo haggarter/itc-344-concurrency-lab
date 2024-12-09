@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
 		//TODO: Accept a client using accept_client(int sfd) in help.c
 
         //TODO: add the client to the front of the queue
-		
+
 	}
 	return 0;
 }
@@ -45,7 +45,7 @@ void* consumer(void* ptr) {
 			front = 0;
 		
 		//TODO: Handle the client using handle_client(int sfd) in help.c
-		
+
 	}
 	pthread_exit(0);
 }
