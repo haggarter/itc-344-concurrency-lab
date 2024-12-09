@@ -23,9 +23,10 @@ The socket setup for accepting client connections is pre-built and provided to y
 - what should be changed?
 
 ## Processes vs. Threads
-
+(include diagrams for processes and threads)
 
 ## Additional Information
+(include links to more resources)
 
 
 ## Grade
