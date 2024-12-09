@@ -1,5 +1,6 @@
 #include <pthread.h>
 #include <semaphore.h>
+#include <stdio.h>
 
 #include "../helper_code/help.h"
 
@@ -13,7 +14,7 @@ sem_t mutex;
 sem_t available_slot;
 sem_t client_pending;
 
-void* consumer();
+void* consumer(void* ptr);
 
 int main(int argc, char *argv[]) {
     //open a TCP socket to listen on
@@ -32,7 +33,7 @@ int main(int argc, char *argv[]) {
 
     //spawn each thread and add it to the threadpool
 	for (int i = 0; i < NUM_THREADS; i++) {
-		pthread_create(&thread_ids[i], NULL, consumer, NULL);
+		pthread_create(&thread_ids[i], NULL, &consumer, NULL);
 	}
 
     //wait indefinitely for clients to send a request
@@ -50,7 +51,7 @@ int main(int argc, char *argv[]) {
 	return 0;
 }
 
-void* consumer() {
+void* consumer(void* ptr) {
     //run as a detached thread
 	pthread_detach(pthread_self());
     //wait indefinitely for a pending client
