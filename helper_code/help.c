@@ -15,15 +15,6 @@
 
 static const char *user_agent_hdr = "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:97.0) Gecko/20100101 Firefox/97.0";
 
-sa_family_t address_family(int socket) {
-	struct sockaddr_storage address;
-	socklen_t address_len = sizeof(address);
-	if (getsockname(socket, (struct sockaddr*)&address, &address_len) < 0) {
-		return -1;
-	}
-	return address.ss_family;
-}
-
 int populate_sockaddr(struct sockaddr *addr, sa_family_t addr_fam, const char *ip, unsigned short port) {
 	if (addr_fam == AF_INET) {
 		struct sockaddr_in *ipv4addr = (struct sockaddr_in *)addr;
