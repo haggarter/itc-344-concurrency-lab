@@ -16,6 +16,18 @@ The socket setup for accepting client connections is pre-built and provided to y
 - Identify and address race conditions in a multi-threaded context.
 - Compare performance and resource usage between threading and forking models.
 
+
+## Where to Start
+- get server running
+- Test the code to see what happens
+- what should be changed?
+
+## Processes vs. Threads
+
+
+## Additional Information
+
+
 ## Grade
 - [ ] Successfully implement processes
 - [ ] Successfully implement thread
