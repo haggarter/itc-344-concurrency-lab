@@ -51,22 +51,6 @@ int populate_sockaddr(struct sockaddr *addr, sa_family_t addr_fam, const char *i
 	return 0;
 }
 
-int parse_sockaddr(const struct sockaddr *addr, char *ip, unsigned short *port) {
-	sa_family_t addr_fam = addr->sa_family;
-	if (addr_fam == AF_INET) {
-		struct sockaddr_in *ipv4addr = (struct sockaddr_in *)addr;
-		inet_ntop(addr_fam, &ipv4addr->sin_addr, ip, INET6_ADDRSTRLEN);
-		*port = ntohs(ipv4addr->sin_port);
-	} else if (addr_fam == AF_INET6) {
-		struct sockaddr_in6 *ipv6addr = (struct sockaddr_in6 *)addr;
-		inet_ntop(addr_fam, &ipv6addr->sin6_addr, ip, INET6_ADDRSTRLEN);
-		*port = ntohs(ipv6addr->sin6_port);
-	} else {
-		return -1;
-	}
-	return 0;
-}
-
 int complete_request_received(char *request) {
 	if (strstr(request, "\r\n\r\n") == NULL)
 		return 0;

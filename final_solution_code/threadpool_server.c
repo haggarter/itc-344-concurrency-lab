@@ -1,6 +1,5 @@
 #include <pthread.h>
 #include <semaphore.h>
-#include <stdio.h>
 
 #include "../helper_code/help.h"
 
