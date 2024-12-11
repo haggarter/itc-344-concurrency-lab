@@ -27,7 +27,7 @@ Review the man pages for:
 - [`wait()`](https://man7.org/linux/man-pages/man2/wait.2.html)
 - [`pthread_create()`](https://man7.org/linux/man-pages/man3/pthread_create.3.html)
 - [`sem_init()`](https://man7.org/linux/man-pages/man3/sem_init.3.html)
-- [`sem_post()](https://man7.org/linux/man-pages/man3/sem_post.3.html)
+- [`sem_post()`](https://man7.org/linux/man-pages/man3/sem_post.3.html)
 - [`sem_wait()`](https://man7.org/linux/man-pages/man3/sem_wait.3.html)
 
 You may program on any machine and with any text editor or IDE you would like. You must compile and run all code on the provided remote Linux machine. This ensures stability, as all of the programs you will need have been installed on the system and the programs you are writing are intended for Linux. It also ensures that the test driver will function for grading.
