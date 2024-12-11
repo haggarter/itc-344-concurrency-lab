@@ -27,7 +27,13 @@ The socket setup for accepting client connections is pre-built and provided to y
 ### Processes
 A process is an instance of a program running on a computer. Each process operates in its own memory space, isolated from other processes. They are managed by the operating system and each process has its own resources, such as memory and file descriptors. The following diagram shows a single process.
 
-![single process diagram](./single_process)
+![single_process](https://github.com/user-attachments/assets/41dfca9c-dd91-45a2-97e6-95392ae44f8d)
+
+With just one process, a computer can complete it successfully, but what happens when we need to run many iterations of the process? The following diagram depicts what that looks like:
+
+![multi_process](https://github.com/user-attachments/assets/f8a9cbf0-3b39-415c-afec-d6853813999b)
+
+
 
 (include diagrams for processes and threads)
 
