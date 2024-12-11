@@ -166,9 +166,20 @@ Try running the test driver:
 python3 test_driver.py process_server
 ```
 
-Oh no! It is doing some weird things. It is failing, or throwing, exceptions, or stalling. Running it several times will likely result in different results (don't worry if it does not, as it is impossible to predict what will happen when you run this code).
+Oh no! It is doing some weird things. It is failing, or throwing exceptions, or stalling. Running it several times will likely result in different results (don't worry if it does not, as it is impossible to predict what will happen when you run this code).
 
 What happened? Maybe the senior developer will have some insight.
+
+### Part 4 - Semaphores and the Producer-Consumer Problem
+Hi! I just saw your messages. Wow, it looks like we forgot something important while we were setting up the threadpool server. I just got back from the beach, and I'm a little bit tired, so I haven't had a chance to look into the problem too much. I did notice that we are lacking semaphores, and with that it reminded me of something called the producer-consumer problem.
+
+Watch [this video](https://youtu.be/l6zkaJFjUbM?si=Vm5ulerpUSWIB6mn) to understand the producer-consumer problem. If you do not feel comfortable with semaphores, I would recommend watching [this video](https://youtu.be/YSn8_XdGH7c?si=YNhNCN-ESXOai7v5) too.
+
+I can't help you much because, well, I'm tired and this is vacation. I'll see you in a few days :).
+
+Well, it looks like that is all the help you will be getting for fixing the threadpool server. Good luck! Please talk to the TAs for help clarifying the problem and for resources for how to find the solution.
+
+### Testing Part 4
 
 ## Processes vs. Threads
 
