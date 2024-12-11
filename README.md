@@ -68,8 +68,9 @@ However, improper use of semaphores can lead to:
 Threads provide powerful tools for improving performance and resource utilization, but they require careful management to avoid these pitfalls. Let’s explore how these challenges are addressed in practice and why threads are a critical component of modern computing.
 
 ## Additional Information
-(include links to more resources)
-
+Below are some sites that discuss more of the topics if you have any questions:
+[Processes vs. Threads](https://www.geeksforgeeks.org/difference-between-process-and-thread/#)
+[How semaphores work](https://www.geeksforgeeks.org/semaphores-in-process-synchronization/)
 
 ## Grade
 - [ ] Successfully implement processes
