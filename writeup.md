@@ -1,7 +1,7 @@
 # Concurrency Lab Writeup
 
 ## Questions
-*Answer the following questions*
+*Answer the following questions:*
 #### 1.  Explain how concurrency was implemented in your process and threadpool servers.
 
 
