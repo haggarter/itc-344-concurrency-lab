@@ -39,26 +39,26 @@ Add the following to the file process_server.c
 
 ### Testing Part 1
 Once you have that program ready to roll, run the following command to compile it:
-'''
+```
 gcc -o process_server process_server.c help.c
-'''
+```
 
 Test that it acts as an echo server. Run the following to start it:
-'''
+```
 ./process_server 8080
-'''
+```
 
 Then, run the following to start a telnet connection with the server:
-'''
+```
 telnet localhost 8080
-'''
+```
 
 Telnet should say that the connection was a success. Type anything you would like, followed by two new lines. You should see whatever you typed echoed back to you.
 
 Once that is working, use the provided test_driver.py to verify that it can accept up to 32 concurrent clients. Run:
-'''
+```
 python3 test_driver.py process_server
-'''
+```
 
 ### Part 2 - Signals
 
