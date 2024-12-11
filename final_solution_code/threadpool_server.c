@@ -18,7 +18,6 @@ void* consumer(void* ptr);
 int main(int argc, char *argv[]) {
     //open a TCP socket to listen on
 	int sfd = open_sfd(argv[1]);
-
     //define the starting point of the queue
 	front = 0;
 
