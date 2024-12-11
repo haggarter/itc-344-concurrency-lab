@@ -181,6 +181,20 @@ Well, it looks like that is all the help you will be getting for fixing the thre
 
 ### Testing Part 4
 
+Compile your program:
+```
+gcc -o threadpool_server threadpool_server.c help.c -lpthread
+```
+
+It should compile with no errors and no warnings. Take a screenshot after compiling to include in your write-up.
+
+You can test using tmux to verify functionality. When you are certain it is working, try running the test driver:
+```
+python3 test_driver.py process_server
+```
+
+Each test should pass. Take a screenshot of your tests passing to include in your write-up.
+
 ## Processes vs. Threads
 
 ### Processes
@@ -232,7 +246,8 @@ Below are some sites that discuss more of the topics if you have any questions:
 [How semaphores work](https://www.geeksforgeeks.org/semaphores-in-process-synchronization/)
 
 ## Grade
-- [ ] Successfully implement processes
-- [ ] Successfully implement thread
-- [ ] Identify the benefits and costs of each option
-- [ ] Resolve race-case scenarios with threads
+- [ ] (10 points) Process server code compiles with no warnings nor errors
+- [ ] (30 points) All tests pass for process server with no orphaned zombie processes
+- [ ] (10 points) Threadpool server code compiles with no warnings nor errors
+- [ ] (30 points) All tests pass for threadpool server
+- [ ] (20 points) Write-up
