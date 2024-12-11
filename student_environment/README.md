@@ -22,7 +22,7 @@ The socket setup for accepting and handling client connections is pre-built and 
 
 ## Instructions
 
-### Part 1 - Process Server
+### Part 1
 Hey, you're the new intern, right? Sorry I'm not in to meet you face to face. I'll be boarding my flight soon, but I wanted to send some information over to you about our current project. EchoCo has long had a dedicated internal echo server for our researchers to help in their tests. Don't ask me why we need it; it is older than I am and the only reason we keep it around is the researchers love it. Hard to teach old dogs new tricks.
 
 Anyway, R&D has been complaining recently that their employees are experiencing latency and connection issues with the server. It seemes we've outgrown the days when all we had were 3 researchers and they mostly just played Goldeneye in the breakroom. The server currently can only handle one request at a time, and it backs up quite a bit with their 32 researchers. We need to add concurrency to the server so that it can handle these loads.
@@ -33,34 +33,7 @@ I have uploaded some starter files and some helper code to github. I need you to
 
 Add the following to the file process_server.c
 - main():
-    In the while loop, call 'accept_client(int sfd)' to wait for a new client to connect. This method will block until a client connects. As soon as a client has connected, call 'fork()'. If it is the child process, call 'handle_client(int sfd)'.
-    
-    *Note: After 'handle_client(int sfd)' is finished, make sure you call 'exit()'! Otherwise, the child process will continue through the program and will jump back to the while loop, effectively turning the child into a new server. This would have very strange results.*
-
-### Testing Part 1
-Once you have that program ready to roll, run the following command to compile it:
-'''
-gcc -o process_server process_server.c help.c
-'''
-
-Test that it acts as an echo server. Run the following to start it:
-'''
-./process_server 8080
-'''
-
-Then, run the following to start a telnet connection with the server:
-'''
-telnet localhost 8080
-'''
-
-Telnet should say that the connection was a success. Type anything you would like, followed by two new lines. You should see whatever you typed echoed back to you.
-
-Once that is working, use the provided test_driver.py to verify that it can accept up to 32 concurrent clients. Run:
-'''
-python3 test_driver.py process_server
-'''
-
-### Part 2 - Signals
+    In the main function, 
 
 ## Processes vs. Threads
 

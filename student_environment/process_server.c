@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "../helper_code/help.h"
+#include "help.h"
 
 int main(int argc, char *argv[]) {
     //open a TCP socket to listen on
