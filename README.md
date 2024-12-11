@@ -25,17 +25,14 @@ The socket setup for accepting client connections is pre-built and provided to y
 ## Processes vs. Threads
 
 ### Processes
-A process is an instance of a program running on a computer. Each process operates in its own memory space, isolated from other processes. They are managed by the operating system and each process has its own resources, such as memory and file descriptors. The following diagram shows a single process.
+A process is an active instance of a program running on a computer. Each process has its own dedicated memory space, separate from other processes, ensuring they don’t interfere with one another. The operating system is responsible for managing processes, allocating the necessary resources—such as memory, CPU time, and file handles—for each one. The following diagram illustrates a single process in action.
 
-![single_process](https://github.com/user-attachments/assets/41dfca9c-dd91-45a2-97e6-95392ae44f8d)
+> ![asingle process](https://github.com/user-attachments/assets/41dfca9c-dd91-45a2-97e6-95392ae44f8d)
+When only one process is running, the computer can focus all its resources on completing it efficiently. However, what happens when we need to run multiple instances of the same process or several different processes simultaneously? The diagram below shows how this scenario unfolds.
 
-With just one process, a computer can complete it successfully, but what happens when we need to run many iterations of the process? The following diagram depicts what that looks like:
+> ![multiple processes](https://github.com/user-attachments/assets/f8a9cbf0-3b39-415c-afec-d6853813999b)
 
-![multi_process](https://github.com/user-attachments/assets/f8a9cbf0-3b39-415c-afec-d6853813999b)
-
-
-
-(include diagrams for processes and threads)
+This approach is not efficient and can overwhelm the CPU, causing processes to compete for resources and take longer to complete. To address these challenges, modern systems often rely on threads, which allow multiple tasks to run concurrently within a single process, reducing overhead and improving performance. Let’s explore how threads work and why they are a more efficient alternative in certain scenarios. 
 
 ## Additional Information
 (include links to more resources)
