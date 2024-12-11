@@ -17,8 +17,8 @@ The socket setup for accepting and handling client connections is pre-built and 
 - Identify and address race conditions in a multi-threaded context
 - Compare performance and resource usage between threading and forking models
 
-## Setup
-
+## Getting Started
+Read the section on [processes](#processes), on [threads](#threads), and on [their differences](#processes-vs-threads). Also check out the resources in [additional information](#additional-information).
 
 ## Instructions
 
@@ -33,9 +33,9 @@ I have uploaded some starter files and some helper code to github. I need you to
 
 Add the following to the file process_server.c
 - main():
-    In the while loop, call 'accept_client(int sfd)' to wait for a new client to connect. This method will block until a client connects. As soon as a client has connected, call 'fork()'. If it is the child process, call 'handle_client(int sfd)'.
+    In the while loop, call `accept_client(int sfd)` to wait for a new client to connect. This method will block until a client connects. As soon as a client has connected, call `fork()`. If it is the child process, call `handle_client(int sfd)`.
     
-    *Note: After 'handle_client(int sfd)' is finished, make sure you call 'exit()'! Otherwise, the child process will continue through the program and will jump back to the while loop, effectively turning the child into a new server. This would have very strange results.*
+    *Note: After `handle_client(int sfd)` is finished, make sure you call `exit()`. Otherwise, the child process will continue through the program and will jump back to the while loop, effectively turning the child into a new server!*
 
 ### Testing Part 1
 Once you have that program ready to roll, run the following command to compile it:
