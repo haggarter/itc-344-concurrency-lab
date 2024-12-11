@@ -12,13 +12,14 @@ The socket setup for accepting and handling client connections is pre-built and 
 - Assigning each client connection to a thread in a thread pool.
 
 ## Learning Objectives
-- Understand how to implement threading and process control in a C program
 - Understand and implement concurrency using threads and processes
+- Use signal handling to avoid generating orphaned zombie processes
 - Identify and address race conditions in a multi-threaded context
+- Use semaphores to properly protect critical regions of a multi-threaded program
 - Compare performance and resource usage between threading and forking models
 
 ## Getting Started
-Read the section on [processes](#processes), on [threads](#threads), and on [their differences](#processes-vs-threads). Also check out the resources in [additional information](#additional-information).
+Read the section on [processes](#processes) and the section on [threads](#threads). Also check out the resources in [additional information](#additional-information).
 
 ## Instructions
 
@@ -32,7 +33,7 @@ The server was written in what everything was written in back in the day: C. I h
 I have uploaded some starter files and some helper code to github. I need you to go through and flesh them out. Check out the process_server.c file. It should have comments on what you need to do to get a process up and running. Don't worry about any of the socket stuff and communicating with clients. I took care of that in help.c, and I've commented each place that you'll need to call methods from help.c.
 
 Add the following to the file process_server.c
-- main():
+- `main()`:
     In the while loop, call `accept_client(int sfd)` to wait for a new client to connect. This method will block until a client connects. As soon as a client has connected, call `fork()`. If it is the child process, call `handle_client(int sfd)`.
     
     *Note: After `handle_client(int sfd)` is finished, make sure you call `exit()`. Otherwise, the child process will continue through the program and will jump back to the while loop, effectively turning the child into a new server!*
@@ -43,24 +44,98 @@ Once you have that program ready to roll, run the following command to compile i
 gcc -o process_server process_server.c help.c
 ```
 
-Test that it acts as an echo server. Run the following to start it:
+Run the following command to open tmux:
+```
+tmux
+```
+
+Tmux is a terminal multiplexer, meaning it will allow us to open multiple terminals in the same session. Press **ctl + b** and then **%** to divide the current terminal in half vertically. Press **ctl + b** and then **left** or **right** to switch between terminls.  
+
+Test that it acts as an echo server. In one terminal, run the following to start the server:
 ```
 ./process_server 8080
 ```
 
-Then, run the following to start a telnet connection with the server:
+Then, run the following in the other terminal to start a telnet connection with the server:
 ```
 telnet localhost 8080
 ```
 
 Telnet should say that the connection was a success. Type anything you would like, followed by two new lines. You should see whatever you typed echoed back to you.
 
-Once that is working, use the provided test_driver.py to verify that it can accept up to 32 concurrent clients. Run:
+Once that is working, use the provided test_driver.py to verify that it can accept up to 32 concurrent clients. Use the `exit` command in each tmux terminal until you are back to your original session. Then, run:
 ```
 python3 test_driver.py process_server
 ```
 
+Each test should say that it passed.
+
 ### Part 2 - Signals
+Hey, thanks for getting that server sorted out! I like it a lot. I did find one rather big error though that might be a problem for us. We forgot to have our server reap all its child processes! Basically, that means that they never exited properly. They are now just sitting there, taking up memory. The longer we run the server, the more these zombie children will eat up our system. I'll show you what I mean. Run the following command:
+```
+htop
+```
+
+Look through the results. Anything process with a status Z is one of our orphaned zombie processes from when we ran the test driver. We need to fix that. We can do so with signals. When the child process exits, it sends `SIGCHLD` to its parent process. The parent process can then call `wait()` to reap each of these children that have exited. When this happens, the process is removed from the operating system's list of processes and its memory can finally be freed for another process.
+
+To get rid of these zombie processes, reboot your machine:
+```
+sudo reboot
+```
+
+Add the following to your code to handle reaping child processes:
+- include relevant headers:
+    Add `#include <signal.h>` and `#include <sys/wait.h>` to your headers
+- `reap_children(int sig)`:
+    Add the method to reap children above your `main()` method. Use the starter code:
+    ```
+    void reap_children(int sig) {
+        //Suppress unused parameter warning
+        (void)sig;
+        while (/*TODO: call wait() with proper parameters to reap any children who are ready to be reaped > 0);
+    }
+    ```
+    Fill out the area marked with TODO.
+    *hint: see the man page for wait, particularly the part about `WNOHANG`*
+- `main()`:
+    Add the following code to main before the call to `open_sfd()`:
+    ```
+    //Set up a signal handler for SIGCHLD to reap children
+    struct sigaction sa;
+    sa.sa_handler = reap_children;
+    sa.sa_flags = SA_RESTART | SA_NOCLDSTOP;
+    sigaction(SIGCHLD, &sa, NULL);
+    ```
+    This installs a signal handler. When the parent process receives a `SIGCHLD` signal, it will call our `reap_children()` method.
+
+### Testing Part 2
+Recompile your code:
+```
+gcc -o process_server process_server.c help.c
+```
+
+Run the following command to open tmux:
+```
+tmux
+```
+
+Divide your tmux session into two terminals again.
+
+In one terminal, run:
+```
+htop
+```
+
+In the other, run:
+```
+python3 test_driver.py process_server
+```
+
+Each test should still say that it passed. There should be no zombie processes (status Z) in htop.
+
+Take a picture of your tmux session to show the working process server to include in your write-up.
+
+### Part 3 - Threadpool Server
 
 ## Processes vs. Threads
 
