@@ -44,6 +44,8 @@ Once you have that program ready to roll, run the following command to compile i
 gcc -o process_server process_server.c help.c
 ```
 
+It should compile with no errors and no warnings.
+
 Run the following command to open tmux:
 ```
 tmux
@@ -71,12 +73,12 @@ python3 test_driver.py process_server
 Each test should say that it passed.
 
 ### Part 2 - Signals
-Hey, thanks for getting that server sorted out! I like it a lot. I did find one rather big error though that might be a problem for us. We forgot to have our server reap all its child processes! Basically, that means that they never exited properly. They are now just sitting there, taking up memory. The longer we run the server, the more these zombie children will eat up our system. I'll show you what I mean. Run the following command:
+Hey, thanks for getting that server sorted out! I just got off the plane and I had a chance to peek at your implementation. I like it a lot. I did find one rather big error though that might be a problem for us. We forgot to have our server reap all its child processes! Basically, that means that they never exited properly. They are now just sitting there, taking up memory. The longer we run the server, the more these zombie children will eat up our system. I'll show you what I mean. Run the following command:
 ```
 htop
 ```
 
-Look through the results. Anything process with a status Z is one of our orphaned zombie processes from when we ran the test driver. We need to fix that. We can do so with signals. When the child process exits, it sends `SIGCHLD` to its parent process. The parent process can then call `wait()` to reap each of these children that have exited. When this happens, the process is removed from the operating system's list of processes and its memory can finally be freed for another process.
+Look through the results. Any process with a status Z is one of our orphaned zombie processes from when we ran the test driver. We need to fix that. We can do so with signals. When the child process exits, it sends `SIGCHLD` to its parent process. The parent process can then call `wait()` to reap each of these children that have exited. When this happens, the process is removed from the operating system's list of processes and its memory can finally be freed for another process.
 
 To get rid of these zombie processes, reboot your machine:
 ```
@@ -96,6 +98,7 @@ Add the following to your code to handle reaping child processes:
     }
     ```
     Fill out the area marked with TODO.
+
     *hint: see the man page for wait, particularly the part about `WNOHANG`*
 - `main()`:
     Add the following code to main before the call to `open_sfd()`:
@@ -114,6 +117,8 @@ Recompile your code:
 gcc -o process_server process_server.c help.c
 ```
 
+It should compile without errors or warnings. Take a screenshot of successfully compiling the code to include in your write-up.
+
 Run the following command to open tmux:
 ```
 tmux
@@ -121,12 +126,12 @@ tmux
 
 Divide your tmux session into two terminals again.
 
-In one terminal, run:
+In one terminal, run htop:
 ```
 htop
 ```
 
-In the other, run:
+In the other, run the test driver:
 ```
 python3 test_driver.py process_server
 ```
@@ -136,6 +141,34 @@ Each test should still say that it passed. There should be no zombie processes (
 Take a picture of your tmux session to show the working process server to include in your write-up.
 
 ### Part 3 - Threadpool Server
+I just got off the phone with our system administrator. Our process server worked great! Too great, actually. With confidence in our echo server up so high, R&E has started to use it way more often, increasing traffic by nearly 300%. The system just does not have enough memory to support these loads on top of its other uses. Alas, our little echo server is not the main focus of the machine it is running on. Who would have guessed?
+
+We need to do something that is way less memory-intensive. Processes were simple to implement, but they've got to go. I had another idea for the server, this time for a threadpool.
+
+A threadpool is a team of threads working together to complete a common purpose. In this case, the threadpool will be working to service clients in a queue. I've already created a starter code framework, as well as implemented the queue. Your job will be to implement the thread functionality.
+
+Add the following code to threadpool_server.c:
+- `main()`:
+    Create an array of size `NUM_THREADS` and type `pthread_t` for your thread team IDs. Then, loop through that array and spawn a thread for each ID using `pthread_create()`. The name of the thread function is `consumer`. In the main loop, call `accept_client(int sfd)` like you did with the process server. After a client is accepted, add the client to the front of the queue.
+- `consumer`:
+    In the consumer class, store the socket file descriptor in the queue at first in the `sfd` variable. Call `handle_client()` to handle the recently connected client.
+
+### Testing Part 3
+Compile your program:
+```
+gcc -o threadpool_server threadpool_server.c help.c -lpthread
+```
+
+It should compile with no errors and no warnings.
+
+Try running the test driver:
+```
+python3 test_driver.py process_server
+```
+
+Oh no! It is doing some weird things. It is failing, or throwing, exceptions, or stalling. Running it several times will likely result in different results (don't worry if it does not, as it is impossible to predict what will happen when you run this code).
+
+What happened? Maybe the senior developer will have some insight.
 
 ## Processes vs. Threads
 
