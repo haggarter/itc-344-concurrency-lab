@@ -53,11 +53,11 @@ Threads run concurrently within a process, meaning they can execute tasks in par
 **Challenges with Threads**
 While threads offer many advantages, they also introduce complexities, especially when multiple threads access shared resources:
 
-> **Race Conditions:**
-> A race condition occurs when two or more threads access shared data simultaneously, and the final outcome depends on the timing of their execution. For instance, if two threads increment the same counter variable without proper synchronization, they might overwrite each other's updates, leading to incorrect results.
+ **Race Conditions:**
+ A race condition occurs when two or more threads access shared data simultaneously, and the final outcome depends on the timing of their execution. For instance, if two threads increment the same counter variable without proper synchronization, they might overwrite each other's updates, leading to incorrect results.
 
 
-Synchronization and the Role of Semaphores:
+**Synchronization and the Role of Semaphores:**
 To prevent race conditions, synchronization mechanisms like semaphores are used. A semaphore acts as a signaling mechanism to control access to shared resources. For example, a semaphore can allow only one thread to modify a shared variable at a time, ensuring consistency. 
 
 However, improper use of semaphores can lead to:
